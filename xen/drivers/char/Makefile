@@ -7,4 +7,5 @@ obj-$(CONFIG_HAS_OMAP) += omap-uart.o
 obj-$(CONFIG_HAS_SCIF) += scif-uart.o
 obj-$(CONFIG_HAS_EHCI) += ehci-dbgp.o
 obj-$(CONFIG_ARM) += arm-uart.o
+obj-$(CONFIG_BCM2837_MU) += bcm2837_mu.o
 obj-y += serial.o
