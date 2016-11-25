@@ -693,12 +693,12 @@ init_uart:
 /* Print early debug messages.
  * x0: Nul-terminated string to print.
  * x23: Early UART base address
- * Clobbers x0-x1 */
+ * Clobbers x0-x1-x2 */
 puts:
         early_uart_ready x23, 1
         ldrb  w1, [x0], #1           /* Load next char */
         cbz   w1, 1f                 /* Exit on nul */
-        early_uart_transmit x23, w1, 1
+        early_uart_transmit x23, w1, 2
         b     puts
 1:
         ret

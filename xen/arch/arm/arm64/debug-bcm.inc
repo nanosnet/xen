@@ -30,8 +30,8 @@
         str   w\c, [\xb, #0x0C]      /* -> UARTLCR_H (Line control) */
         ldr   x\c, =0x00000007       /* RXE | TXE | UARTEN */
         str   w\c, [\xb, #0x20]      /* -> UARTCR (Control Register) */
-        /*ldr   x\c, =0x00000003 */      /* ENABLE */
-       /* str   w\c, [\xb, #0x04]  */    /* -> IER */
+        ldr   x\c, =0x00000003       /* ENABLE */
+        str   w\c, [\xb, #0x04]      /* -> IER */
 .endm
 
 /* PL011 UART wait UART to be ready to transmit
@@ -48,6 +48,10 @@
  * xb: register which contains the UART base address
  * wt: register which contains the character to transmit */
 .macro early_uart_transmit xb, wt, c
+1:
+        ldrh  w\c, [\xb, #0x14]      /* <- UARTFR (Flag register) */
+        tst   w\c, #0x20             /* Check BUSY bit */
+        b.eq  1b                     /* Wait for the UART to be ready */
         strb  \wt, [\xb]             /* -> UARTDR (Data Register) */
 .endm
 
