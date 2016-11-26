@@ -29,7 +29,7 @@
 GLOBAL(early_putch)
         ldr   x15, =EARLY_UART_VIRTUAL_ADDRESS
         early_uart_ready x15, 1
-        early_uart_transmit x15, w0
+        early_uart_transmit x15, w0, 1
         ret
 
 /* Flush the UART - this function is called by C */
