@@ -163,9 +163,10 @@ static void __init init_dt_xen_time(void)
     for ( i = TIMER_PHYS_SECURE_PPI; i < MAX_TIMER_PPI; i++ )
     {
         res = platform_get_irq(timer, i);
+        printk("%s: res:%d, i:%u\n", __func__, res, i);
 
         if ( res < 0 )
-            panic("Timer: Unable to retrieve IRQ %u from the device tree", i);
+            printk("Timer: Unable to retrieve IRQ %u from the device tree", i);
         timer_irq[i] = res;
     }
 }
