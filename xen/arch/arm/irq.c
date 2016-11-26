@@ -687,14 +687,18 @@ int platform_get_irq(const struct dt_device_node *device, int index)
     struct dt_irq dt_irq;
     unsigned int type, irq;
 
-    if ( dt_device_get_irq(device, index, &dt_irq) )
+    if ( dt_device_get_irq(device, index, &dt_irq) ) {
+	printk("%s: index:%d\n", __func__, index);
         return -1;
+    }
 
     irq = dt_irq.irq;
     type = dt_irq.type;
 
-    if ( irq_set_type(irq, type) )
+    if ( irq_set_type(irq, type) ) {
+	printk("%s: index:%d, irq:%u, type:%u\n", __func__, index, irq, type);
         return -1;
+    }
 
     return irq;
 }

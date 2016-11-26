@@ -933,6 +933,7 @@ static void __init gicv2_dt_init(void)
     const struct dt_device_node *node = gicv2_info.node;
 
     res = dt_device_get_address(node, 0, &dbase, NULL);
+    printk("%s: dbase:%#lx\n", __func__, dbase);
     if ( res )
         panic("GICv2: Cannot find a valid address for the distributor");
 
