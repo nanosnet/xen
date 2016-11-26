@@ -693,7 +693,7 @@ init_uart:
 /* Print early debug messages.
  * x0: Nul-terminated string to print.
  * x23: Early UART base address
- * Clobbers x0-x1 */
+ * Clobbers x0-x1-x2 */
 puts:
         early_uart_ready x23, 1
         ldrb  w1, [x0], #1           /* Load next char */
@@ -706,7 +706,7 @@ puts:
 /* Print a 32-bit number in hex.  Specific to the PL011 UART.
  * x0: Number to print.
  * x23: Early UART base address
- * Clobbers x0-x3 */
+ * Clobbers x0-x4 */
 putn:
         adr   x1, hex
         mov   x3, #8

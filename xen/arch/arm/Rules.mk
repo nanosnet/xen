@@ -32,6 +32,8 @@ EARLY_PRINTK_brcm           := 8250,0xF040AB00,2
 EARLY_PRINTK_dra7           := 8250,0x4806A000,2
 EARLY_PRINTK_fastmodel      := pl011,0x1c090000,115200
 EARLY_PRINTK_exynos5250     := exynos4210,0x12c20000
+EARLY_PRINTK_rpi2           := pl011,0x00201000,115200
+EARLY_PRINTK_rpi3           := bcm,0x3f215040,115200
 EARLY_PRINTK_juno           := pl011,0x7ff80000
 EARLY_PRINTK_lager          := scif,0xe6e60000
 EARLY_PRINTK_midway         := pl011,0xfff36000
@@ -60,6 +62,12 @@ ifeq ($(EARLY_PRINTK_INC),8250)
 EARLY_UART_REG_SHIFT := $(word 3,$(EARLY_PRINTK_CFG))
 endif
 ifeq ($(EARLY_PRINTK_INC),pl011)
+ifneq ($(word 3,$(EARLY_PRINTK_CFG)),)
+EARLY_PRINTK_INIT_UART := y
+EARLY_PRINTK_BAUD := $(word 3,$(EARLY_PRINTK_CFG))
+endif
+endif
+ifeq ($(EARLY_PRINTK_INC),bcm)
 ifneq ($(word 3,$(EARLY_PRINTK_CFG)),)
 EARLY_PRINTK_INIT_UART := y
 EARLY_PRINTK_BAUD := $(word 3,$(EARLY_PRINTK_CFG))
