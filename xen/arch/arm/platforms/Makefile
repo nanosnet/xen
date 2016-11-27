@@ -1,4 +1,5 @@
 obj-y += vexpress.o
+obj-$(CONFIG_ARM_64) += bcm.o
 obj-$(CONFIG_ARM_32) += brcm.o
 obj-$(CONFIG_ARM_32) += exynos5.o
 obj-$(CONFIG_ARM_32) += midway.o
