@@ -39,6 +39,7 @@ static inline void __raw_writew(u16 val, volatile void __iomem *addr)
 
 static inline void __raw_writel(u32 val, volatile void __iomem *addr)
 {
+	printk("addr:%#lx, val:%u\n", (u64)addr, val);
         asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
 }
 

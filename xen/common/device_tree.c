@@ -1427,8 +1427,10 @@ int dt_device_get_raw_irq(const struct dt_device_node *device,
 
     /* Get the interrupts property */
     intspec = dt_get_property(device, "interrupts", &intlen);
-    if ( intspec == NULL )
+    if ( intspec == NULL ) {
+	printk("%s:%u \n", __func__, __LINE__);
         return -EINVAL;
+    }
     intlen /= sizeof(*intspec);
 
     dt_dprintk(" intspec=%d intlen=%d\n", be32_to_cpup(intspec), intlen);
@@ -1438,26 +1440,34 @@ int dt_device_get_raw_irq(const struct dt_device_node *device,
 
     /* Look for the interrupt parent. */
     p = dt_irq_find_parent(device);
-    if ( p == NULL )
+    if ( p == NULL ) {
+	printk("%s:%u \n", __func__, __LINE__);
         return -EINVAL;
+    }
 
     /* Get size of interrupt specifier */
     tmp = dt_get_property(p, "#interrupt-cells", NULL);
-    if ( tmp == NULL )
+    if ( tmp == NULL ) {
+	printk("%s:%u \n", __func__, __LINE__);
         goto out;
+    }
     intsize = be32_to_cpu(*tmp);
 
     dt_dprintk(" intsize=%d intlen=%d\n", intsize, intlen);
 
     /* Check index */
-    if ( (index + 1) * intsize > intlen )
+    if ( (index + 1) * intsize > intlen ) {
+	printk("%s:%u \n", __func__, __LINE__);
         goto out;
+    }
 
     /* Get new specifier and map it */
     res = dt_irq_map_raw(p, intspec + index * intsize, intsize,
                          addr, out_irq);
-    if ( res )
+    if ( res ) {
+	printk("%s:%u \n", __func__, __LINE__);
         goto out;
+    }
 out:
     return res;
 }
@@ -1472,9 +1482,10 @@ int dt_irq_translate(const struct dt_raw_irq *raw,
      * TODO: Retrieve the right irq_xlate. This is only works for the primary
      * interrupt controller.
      */
-    if ( raw->controller != dt_interrupt_controller )
+    if ( raw->controller != dt_interrupt_controller ) {
+        printk(":%s:%u blah, \n", __func__, __LINE__);
         return -EINVAL;
-
+    }
     return dt_irq_xlate(raw->specifier, raw->size,
                         &out_irq->irq, &out_irq->type);
 }
@@ -1486,6 +1497,7 @@ int dt_device_get_irq(const struct dt_device_node *device, unsigned int index,
     int res;
 
     res = dt_device_get_raw_irq(device, index, &raw);
+    printk(":%s:%u blah, res:%d\n", __func__, __LINE__, res);
 
     if ( res )
         return res;

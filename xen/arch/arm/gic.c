@@ -66,6 +66,7 @@ enum gic_version gic_hw_version(void)
 
 unsigned int gic_number_lines(void)
 {
+    printk("gic_hw_ops->info->nr_lines: %u\n", gic_hw_ops->info->nr_lines);
     return gic_hw_ops->info->nr_lines;
 }
 
@@ -222,8 +223,10 @@ int gic_irq_xlate(const u32 *intspec, unsigned int intsize,
                   unsigned int *out_hwirq,
                   unsigned int *out_type)
 {
-    if ( intsize < 3 )
+    if ( intsize < 3 ) {
+        printk(":%s:%u blah, \n", __func__, __LINE__);
         return -EINVAL;
+    }
 
     /* Get the interrupt number and add 16 to skip over SGIs */
     *out_hwirq = intspec[1] + 16;
@@ -266,6 +269,7 @@ static void __init gic_dt_preinit(void)
         {
             /* NOTE: Only one GIC is supported */
             num_gics = 1;
+	    printk("%s:%u BLAH\n", __func__, __LINE__);
             break;
         }
     }

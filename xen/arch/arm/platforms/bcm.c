@@ -99,11 +99,14 @@ static __init int brcm_populate_plat_regs(void)
                                 "mrs %0," #spr :"=r"(rval)); rval; })
 
     cntfreq = mrs(cntfrq_el0);
+    printk("%s:%s:%u cntfreq:%u\n", __FILE__, __func__, __LINE__, cntfreq); 
     switch (cntfreq) {
         case 19200000:
                 prescaler = 0x80000000;
+		break;
         case 1000000:
                 prescaler = 0x06AAAAAB;
+		break;
         default:
                 prescaler = (u32)((u64)0x80000000 * (u64)cntfreq/
                                         (u64)19200000);
