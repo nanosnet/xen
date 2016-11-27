@@ -698,7 +698,7 @@ puts:
         early_uart_ready x23, 1
         ldrb  w1, [x0], #1           /* Load next char */
         cbz   w1, 1f                 /* Exit on nul */
-        early_uart_transmit x23, w1, 2
+        early_uart_transmit x23, w1
         b     puts
 1:
         ret
@@ -715,7 +715,7 @@ putn:
         and   x2, x0, #0xf0000000    /* Mask off the top nybble */
         lsr   x2, x2, #28
         ldrb  w2, [x1, x2]           /* Convert to a char */
-        early_uart_transmit x23, w2, 4
+        early_uart_transmit x23, w2
         lsl   x0, x0, #4             /* Roll it through one nybble at a time */
         subs  x3, x3, #1
         b.ne  1b

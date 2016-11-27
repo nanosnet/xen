@@ -51,7 +51,7 @@
 /* PL011 UART transmit character
  * xb: register which contains the UART base address
  * wt: register which contains the character to transmit */
-.macro early_uart_transmit xb, wt, c
+.macro early_uart_transmit xb, wt
         strb  \wt, [\xb]             /* -> UARTDR (Data Register) */
 .endm
 
