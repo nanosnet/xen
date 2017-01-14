@@ -17,6 +17,7 @@ obj-y += domctl.o
 obj-$(EARLY_PRINTK) += early_printk.o
 obj-y += gic.o
 obj-y += gic-v2.o
+obj-$(CONFIG_HAS_GICVC) += gic-vc.o
 obj-$(CONFIG_HAS_GICV3) += gic-v3.o
 obj-y += guestcopy.o
 obj-y += hvm.o

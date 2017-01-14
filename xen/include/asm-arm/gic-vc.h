@@ -1,0 +1,261 @@
+/*
+ * ARM VideoCore IV Interrupt Controller support
+ *
+ * Anastassios Nanos <anastassios.nanos@gmail.com>
+ * Copyright (c) 2011 Citrix Systems.
+ * Tim Deegan <tim@xen.org>
+ * Copyright (c) 2011 Citrix Systems.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#ifndef __ASM_ARM_GIC_VC_H__
+#define __ASM_ARM_GIC_VC_H__
+
+#define NR_GIC_LOCAL_IRQS  NR_LOCAL_IRQS
+#define NR_GIC_SGI         16
+
+#define GICD_CTLR       (0x000)
+#define GICD_TYPER      (0x004)
+#define GICD_IIDR       (0x008)
+#define GICD_IGROUPR    (0x080)
+#define GICD_IGROUPRN   (0x0FC)
+#define GICD_ISENABLER  (0x100)
+#define GICD_ISENABLERN (0x17C)
+#define GICD_ICENABLER  (0x180)
+#define GICD_ICENABLERN (0x1fC)
+#define GICD_ISPENDR    (0x200)
+#define GICD_ISPENDRN   (0x27C)
+#define GICD_ICPENDR    (0x280)
+#define GICD_ICPENDRN   (0x2FC)
+#define GICD_ISACTIVER  (0x300)
+#define GICD_ISACTIVERN (0x37C)
+#define GICD_ICACTIVER  (0x380)
+#define GICD_ICACTIVERN (0x3FC)
+#define GICD_IPRIORITYR (0x400)
+#define GICD_IPRIORITYRN (0x7F8)
+#define GICD_ITARGETSR  (0x800)
+#define GICD_ITARGETSR7 (0x81C)
+#define GICD_ITARGETSR8 (0x820)
+#define GICD_ITARGETSRN (0xBF8)
+#define GICD_ICFGR      (0xC00)
+#define GICD_ICFGR1     (0xC04)
+#define GICD_ICFGR2     (0xC08)
+#define GICD_ICFGRN     (0xCFC)
+#define GICD_NSACR      (0xE00)
+#define GICD_NSACRN     (0xEFC)
+#define GICD_SGIR       (0xF00)
+#define GICD_CPENDSGIR  (0xF10)
+#define GICD_CPENDSGIRN (0xF1C)
+#define GICD_SPENDSGIR  (0xF20)
+#define GICD_SPENDSGIRN (0xF2C)
+#define GICD_ICPIDR2    (0xFE8)
+
+#define GICD_SGI_TARGET_LIST_SHIFT   (24)
+#define GICD_SGI_TARGET_LIST_MASK    (0x3UL << GICD_SGI_TARGET_LIST_SHIFT)
+#define GICD_SGI_TARGET_LIST         (0UL<<GICD_SGI_TARGET_LIST_SHIFT)
+#define GICD_SGI_TARGET_LIST_VAL     (0)
+#define GICD_SGI_TARGET_OTHERS       (1UL<<GICD_SGI_TARGET_LIST_SHIFT)
+#define GICD_SGI_TARGET_OTHERS_VAL   (1)
+#define GICD_SGI_TARGET_SELF         (2UL<<GICD_SGI_TARGET_LIST_SHIFT)
+#define GICD_SGI_TARGET_SELF_VAL     (2)
+#define GICD_SGI_TARGET_SHIFT        (16)
+#define GICD_SGI_TARGET_MASK         (0xFFUL<<GICD_SGI_TARGET_SHIFT)
+#define GICD_SGI_GROUP1              (1UL<<15)
+#define GICD_SGI_INTID_MASK          (0xFUL)
+
+#define GICC_CTLR       (0x0000)
+#define GICC_PMR        (0x0004)
+#define GICC_BPR        (0x0008)
+#define GICC_IAR        (0x000C)
+#define GICC_EOIR       (0x0010)
+#define GICC_RPR        (0x0014)
+#define GICC_HPPIR      (0x0018)
+#define GICC_APR        (0x00D0)
+#define GICC_NSAPR      (0x00E0)
+#define GICC_IIDR       (0x00FC)
+#define GICC_DIR        (0x1000)
+
+#define GICH_HCR        (0x00)
+#define GICH_VTR        (0x04)
+#define GICH_VMCR       (0x08)
+#define GICH_MISR       (0x10)
+#define GICH_EISR0      (0x20)
+#define GICH_EISR1      (0x24)
+#define GICH_ELSR0      (0x30)
+#define GICH_ELSR1      (0x34)
+#define GICH_APR        (0xF0)
+#define GICH_LR         (0x100)
+
+/* Register bits */
+#define GICD_CTL_ENABLE 0x1
+
+#define GICD_TYPE_LINES 0x01f
+#define GICD_TYPE_CPUS_SHIFT 5
+#define GICD_TYPE_CPUS  0x0e0
+#define GICD_TYPE_SEC   0x400
+#define GICD_TYPER_DVIS (1U << 18)
+
+#define GICC_CTL_ENABLE 0x1
+#define GICC_CTL_EOI    (0x1 << 9)
+
+#define GICC_IA_IRQ       0x03ff
+#define GICC_IA_CPU_MASK  0x1c00
+#define GICC_IA_CPU_SHIFT 10
+
+#define GICH_HCR_EN       (1 << 0)
+#define GICH_HCR_UIE      (1 << 1)
+#define GICH_HCR_LRENPIE  (1 << 2)
+#define GICH_HCR_NPIE     (1 << 3)
+#define GICH_HCR_VGRP0EIE (1 << 4)
+#define GICH_HCR_VGRP0DIE (1 << 5)
+#define GICH_HCR_VGRP1EIE (1 << 6)
+#define GICH_HCR_VGRP1DIE (1 << 7)
+
+#define GICH_MISR_EOI     (1 << 0)
+#define GICH_MISR_U       (1 << 1)
+#define GICH_MISR_LRENP   (1 << 2)
+#define GICH_MISR_NP      (1 << 3)
+#define GICH_MISR_VGRP0E  (1 << 4)
+#define GICH_MISR_VGRP0D  (1 << 5)
+#define GICH_MISR_VGRP1E  (1 << 6)
+#define GICH_MISR_VGRP1D  (1 << 7)
+
+/*
+ * The minimum GICC_BPR is required to be in the range 0-3. We set
+ * GICC_BPR to 0 but we must expect that it might be 3. This means we
+ * can rely on premption between the following ranges:
+ * 0xf0..0xff
+ * 0xe0..0xdf
+ * 0xc0..0xcf
+ * 0xb0..0xbf
+ * 0xa0..0xaf
+ * 0x90..0x9f
+ * 0x80..0x8f
+ *
+ * Priorities within a range will not preempt each other.
+ *
+ * A GIC must support a mimimum of 16 priority levels.
+ */
+#define GIC_PRI_LOWEST     0xf0
+#define GIC_PRI_IRQ        0xa0
+#define GIC_PRI_IPI        0x90 /* IPIs must preempt normal interrupts */
+#define GIC_PRI_HIGHEST    0x80 /* Higher priorities belong to Secure-World */
+#define GIC_PRI_TO_GUEST(pri) (pri >> 3) /* GICH_LR and GICH_VMCR only support
+                                            5 bits for guest irq priority */
+
+#define GICH_LR_PENDING         1
+#define GICH_LR_ACTIVE          2
+
+#ifndef __ASSEMBLY__
+#include <xen/device_tree.h>
+#include <xen/irq.h>
+#include <asm-arm/vgic.h>
+
+// Timers interrupt control registers
+#define CORE0_TIMER_IRQCNTL  0x40000040
+#define CORE1_TIMER_IRQCNTL  0x40000044
+#define CORE2_TIMER_IRQCNTL  0x40000048
+#define CORE3_TIMER_IRQCNTL  0x4000004C
+// Where to route timer interrupt to, IRQ/FIQ
+// Setting both the IRQ and FIQ bit gives an FIQ
+#define TIMER0_IRQ 0x01
+#define TIMER1_IRQ 0x02
+#define TIMER2_IRQ 0x04
+#define TIMER3_IRQ 0x08
+#define TIMER0_FIQ 0x10
+#define TIMER1_FIQ 0x20
+#define TIMER2_FIQ 0x40
+#define TIMER3_FIQ 0x80
+// Mailbox interrupt control registers
+#define CORE0_MBOX_IRQCNTL   0x40000050
+#define CORE1_MBOX_IRQCNTL   0x40000054
+#define CORE2_MBOX_IRQCNTL   0x40000058
+#define CORE3_MBOX_IRQCNTL   0x4000005C
+// Where to route mailbox interrupt to, IRQ/FIQ
+// Setting both the IRQ and FIQ bit gives an FIQ
+#define MBOX0_IRQ 0x01
+#define MBOX1_IRQ 0x02
+#define MBOX2_IRQ 0x04
+#define MBOX3_IRQ 0x08
+#define MBOX0_FIQ 0x10
+#define MBOX1_FIQ 0x20
+#define MBOX2_FIQ 0x40
+#define MBOX3_FIQ 0x80
+// IRQ & FIQ source registers
+#define CORE0_IRQ_SOURCE 0x40000060
+#define CORE1_IRQ_SOURCE 0x40000064
+#define CORE2_IRQ_SOURCE 0x40000068
+#define CORE3_IRQ_SOURCE 0x4000006C
+#define CORE0_FIQ_SOURCE 0x40000070
+#define CORE1_FIQ_SOURCE 0x40000074
+#define CORE2_FIQ_SOURCE 0x40000078
+#define CORE3_FIQ_SOURCE 0x4000007C
+// Interrupt source bits
+// IRQ and FIQ are the same
+// GPU bits can be set for one core only 
+#define INT_SRC_TIMER0   0x00000001
+#define INT_SRC_TIMER1   0x00000002
+#define INT_SRC_TIMER2   0x00000004
+#define INT_SRC_TIMER3   0x00000008
+#define INT_SRC_MBOX0    0x00000010
+#define INT_SRC_MBOX1    0x00000020
+#define INT_SRC_MBOX2    0x00000040
+#define INT_SRC_MBOX3    0x00000080
+#define INT_SRC_GPU      0x00000100
+#define INT_SRC_PMU      0x00000200
+// Mailbox write - set registers (Write only)
+#define CORE0_MBOX0_SET 0x40000080
+#define CORE0_MBOX1_SET 0x40000084
+#define CORE0_MBOX2_SET 0x40000088
+#define CORE0_MBOX3_SET 0x4000008C
+#define CORE1_MBOX0_SET 0x40000090
+#define CORE1_MBOX1_SET 0x40000094
+#define CORE1_MBOX2_SET 0x40000098
+#define CORE1_MBOX3_SET 0x4000009C
+#define CORE2_MBOX0_SET 0x400000A0
+#define CORE2_MBOX1_SET 0x400000A4
+#define CORE2_MBOX2_SET 0x400000A8
+#define CORE2_MBOX3_SET 0x400000AC
+#define CORE3_MBOX0_SET 0x400000B0
+#define CORE3_MBOX1_SET 0x400000B4
+#define CORE3_MBOX2_SET 0x400000B8
+#define CORE3_MBOX3_SET 0x400000BC
+// Mailbox write - clear registers (Read & Write)
+#define CORE0_MBOX0_RDCLR 0x400000C0
+#define CORE0_MBOX1_RDCLR 0x400000C4
+#define CORE0_MBOX2_RDCLR 0x400000C8
+#define CORE0_MBOX3_RDCLR 0x400000CC
+#define CORE1_MBOX0_RDCLR 0x400000D0
+#define CORE1_MBOX1_RDCLR 0x400000D4
+#define CORE1_MBOX2_RDCLR 0x400000D8
+#define CORE1_MBOX3_RDCLR 0x400000DC
+#define CORE2_MBOX0_RDCLR 0x400000E0
+#define CORE2_MBOX1_RDCLR 0x400000E4
+#define CORE2_MBOX2_RDCLR 0x400000E8
+#define CORE2_MBOX3_RDCLR 0x400000EC
+#define CORE3_MBOX0_RDCLR 0x400000F0
+#define CORE3_MBOX1_RDCLR 0x400000F4
+#define CORE3_MBOX2_RDCLR 0x400000F8
+#define CORE3_MBOX3_RDCLR 0x400000FC
+
+#endif /* __ASSEMBLY__ */
+#endif /* __ASM_ARM_GIC_VC_H__ */
+
+/*
+ * Local variables:
+ * mode: C
+ * c-file-style: "BSD"
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
+
