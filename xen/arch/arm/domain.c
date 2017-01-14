@@ -586,6 +586,11 @@ int arch_domain_create(struct domain *d, unsigned int domcr_flags,
     case XEN_DOMCTL_CONFIG_GIC_NATIVE:
         switch ( gic_hw_version () )
         {
+        case GIC_VC:
+            config->gic_version = XEN_DOMCTL_CONFIG_GIC_V2;
+            d->arch.vgic.version = GIC_VC;
+            break;
+
         case GIC_V2:
             config->gic_version = XEN_DOMCTL_CONFIG_GIC_V2;
             d->arch.vgic.version = GIC_V2;

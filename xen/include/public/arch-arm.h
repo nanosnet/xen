@@ -301,6 +301,7 @@ DEFINE_XEN_GUEST_HANDLE(vcpu_guest_context_t);
  * XEN_DOMCTL_INTERFACE_VERSION.
  */
 #define XEN_DOMCTL_CONFIG_GIC_NATIVE    0
+#define XEN_DOMCTL_CONFIG_GIC_VC        3
 #define XEN_DOMCTL_CONFIG_GIC_V2        1
 #define XEN_DOMCTL_CONFIG_GIC_V3        2
 struct xen_arch_domainconfig {

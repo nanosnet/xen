@@ -977,7 +977,7 @@ static int map_dt_irq_to_domain(const struct dt_device_node *dev,
     struct domain *d = data;
     unsigned int irq = dt_irq->irq;
     int res;
-    bool_t need_mapping = !dt_device_for_passthrough(dev);
+    bool_t need_mapping = 0; //!dt_device_for_passthrough(dev);
 
     if ( irq < NR_LOCAL_IRQS )
     {
@@ -1091,7 +1091,7 @@ static int handle_device(struct domain *d, struct dt_device_node *dev,
     int res;
     struct dt_raw_irq rirq;
     u64 addr, size;
-    bool_t need_mapping = !dt_device_for_passthrough(dev);
+    bool_t need_mapping = 0;// !dt_device_for_passthrough(dev);
 
     nirq = dt_number_of_irq(dev);
     naddr = dt_number_of_address(dev);
@@ -2220,7 +2220,7 @@ int construct_dom0(struct domain *d)
     set_current(saved_current);
     p2m_restore_state(saved_current);
 
-    discard_initial_modules();
+    /*discard_initial_modules(); */
 
     v->is_initialised = 1;
     clear_bit(_VPF_down, &v->pause_flags);

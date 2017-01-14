@@ -102,6 +102,10 @@ int domain_vgic_register(struct domain *d, int *mmio_count)
         if ( vgic_v2_init(d, mmio_count) )
             return -ENODEV;
         break;
+    case GIC_VC:
+        if ( vgic_v2_init(d, mmio_count) )
+            return -ENODEV;
+        break;
     default:
         printk(XENLOG_G_ERR "d%d: Unknown vGIC version %u\n",
                d->domain_id, d->arch.vgic.version);
