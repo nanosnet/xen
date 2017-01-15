@@ -161,7 +161,6 @@ static void gicvc_cpu_init(void)
         writel_gicd(GIC_PRI_IRQ << 24 | GIC_PRI_IRQ << 16 |
                     GIC_PRI_IRQ << 8 | GIC_PRI_IRQ,
                     GICD_IPRIORITYR + (i / 4) * 4);
-
 }
 
 static void __init gicvc_dt_init(void)

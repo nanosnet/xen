@@ -67,7 +67,7 @@ __init int brcm_get_dt_node(char *compat_str,
 
 static __init int brcm_populate_plat_regs(void)
 {
-    int rc;
+    int rc = -ENODEV;
     const struct dt_device_node *node;
     u64 reg_base;
     u64 *reg_base_va;
@@ -77,7 +77,7 @@ static __init int brcm_populate_plat_regs(void)
     node = dt_find_compatible_node(NULL, NULL, "brcm,bcm2836-l1-intc");
     if (!node) {
         printk("%s: enodev \n", __func__);
-        return -ENODEV;
+        return rc;
     }
     
     rc = dt_device_get_address(node, 0, &reg_base, &size);
@@ -92,7 +92,8 @@ static __init int brcm_populate_plat_regs(void)
     if ( !reg_base_va)
     {
         printk("Unable to map reg_base\n");
-        return -ENOMEM;
+	rc = -EINVAL;
+        goto done;
     }
 
 #define mrs(spr)                ({ u64 rval; asm volatile(\
@@ -112,11 +113,17 @@ static __init int brcm_populate_plat_regs(void)
 
     if (!prescaler) {
 	printk("prescaler error\n");
-        return rc;
+	rc = -EINVAL;
+	goto unmap;
+        //return rc;
     }
     writel(prescaler, reg_base_va + 0x008); /* LOCAL_TIMER_PRESCALER */
+unmap:
+    iounmap(reg_base_va);
 
+    rc = 0;
 
+done:
 
 #if 0
     rc = brcm_get_dt_node("brcm,brcmstb-cpu-biu-ctrl", &node, &reg_base);
@@ -160,7 +167,7 @@ static __init int brcm_populate_plat_regs(void)
                     regs.scratch_reg);
 #endif
 
-    return 0;
+    return rc;
 }
 
 static __init int brcm_init(void)
